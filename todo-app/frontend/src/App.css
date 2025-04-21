@@ -1,10 +1,23 @@
+body {
+  background-color: #bbb2b2; /* Light gray */
+}
+
 .app-container {
-  max-width: 600px;
+  max-width: 400px;
   margin: auto;
   padding: 1rem;
   font-family: sans-serif;
+  margin-top: 100px;
+  /*background-image: url('./assets/capy.jpg');*/
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: rgb(87, 175, 252);
+  color: #333;
+  border-radius: 21px;
 }
 
+/* Remove the dark-mode and light-mode styles */
+/*
 .dark-mode {
   background-color: #1e1e1e;
   color: white;
@@ -14,6 +27,7 @@
   background-color: #f9f9f9;
   color: #333;
 }
+*/
 
 input, button {
   margin: 0.5rem;

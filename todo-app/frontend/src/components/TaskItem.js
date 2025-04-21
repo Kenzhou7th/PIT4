@@ -1,39 +1,81 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 const TaskItem = ({ task, onDelete, onToggle, onEdit }) => {
-  const handleToggle = async () => {
-    const updatedTask = { ...task, completed: !task.completed };
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(task.title);
+  const inputRef = useRef(null);
 
-    const response = await fetch(`http://localhost:8000/todos/${task.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updatedTask)
-    });
+  useEffect(() => {
+    if (isEditing) {
+      inputRef.current.focus();
+    }
+  }, [isEditing]);
 
-    const data = await response.json();
-    onToggle(data);
+  const handleEditClick = () => {
+    setIsEditing(true);
   };
 
-  const handleDelete = async () => {
-    await fetch(`http://localhost:8000/todos/${task.id}`, {
-      method: "DELETE"
-    });
+  const handleInputChange = (e) => {
+    setEditedTitle(e.target.value);
+  };
 
-    onDelete(task.id);
+  const handleSaveClick = () => {
+    onEdit({ ...task, title: editedTitle }); // Call onEdit to update the task
+    setIsEditing(false);
+  };
+
+  const handleCancelClick = () => {
+    setEditedTitle(task.title); // Reset to original title
+    setIsEditing(false);
   };
 
   return (
-    <div>
+    <div key={task.id} style={{
+      marginBottom: '0.5rem',
+      position: 'relative', // Make this a positioning context
+      paddingRight: '70px'   // Add padding to prevent overlap
+    }}>
       <input
         type="checkbox"
         checked={task.completed}
-        onChange={handleToggle}
+        onChange={() => onToggle(task)}
       />
-      <span style={{ textDecoration: task.completed ? "line-through" : "none" }}>
-        {task.title}
-      </span>
-      <button onClick={() => onEdit(task)}>Edit</button>
-      <button onClick={handleDelete}>Delete</button>
+      {isEditing ? (
+        <>
+          <input
+            type="text"
+            value={editedTitle}
+            onChange={handleInputChange}
+            onBlur={handleSaveClick} // Save when focus is lost
+            ref={inputRef}
+            style={{ width: '400px' }} // Adjust the width as needed
+          />
+          <div style={{
+            position: 'absolute',
+            right: '0',
+            top: '50%',
+            transform: 'translateY(-50%)'
+          }}>
+            <button onClick={handleSaveClick}>Save</button>
+            <button onClick={handleCancelClick}>Cancel</button>
+          </div>
+        </>
+      ) : (
+        <>
+          <span style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
+            {task.title}
+          </span>
+          <div style={{
+            position: 'absolute',
+            right: '0',
+            top: '50%',
+            transform: 'translateY(-50%)'
+          }}>
+            <button onClick={handleEditClick}>Edit</button>
+            <button onClick={() => onDelete(task.id)}>Delete</button>
+          </div>
+        </>
+      )}
     </div>
   );
 };
