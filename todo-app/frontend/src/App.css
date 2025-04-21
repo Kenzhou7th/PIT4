@@ -1,0 +1,21 @@
+.app-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 1rem;
+  font-family: sans-serif;
+}
+
+.dark-mode {
+  background-color: #1e1e1e;
+  color: white;
+}
+
+.light-mode {
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+input, button {
+  margin: 0.5rem;
+  padding: 0.5rem;
+}
